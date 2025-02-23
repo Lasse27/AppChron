@@ -5,14 +5,17 @@ import win32process  # type: ignore
 import psutil
 import threading
 
+from db_handler import DatabaseHandler
+
 
 class WatcherThread(threading.Thread):
 
     #
     #
 
-    def __init__(self):
+    def __init__(self, databaseHandler: DatabaseHandler):
         super(WatcherThread, self).__init__()
+        self.databaseHandler = databaseHandler
 
     #
     #
@@ -43,9 +46,11 @@ class WatcherThread(threading.Thread):
         *Args*:
             process (psutil.Process): Der Prozess der vorher aktiv war und nun geloggt wird.
         """
-        print(process.pid)
-        print(process.name())
-        pass
+        try:
+            self.databaseHandler.connect()
+
+        except:
+            self.databaseHandler.disconnect()
 
     #
     #
