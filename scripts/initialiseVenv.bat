@@ -7,6 +7,7 @@ Set "VIRTUAL_ENV=.venv"
 If Not Exist "%VIRTUAL_ENV%\Scripts\activate.bat" (
     python.exe -m pip install --upgrade pip
     pip.exe install virtualenv
+    pip.exe install pyinstaller
     python.exe -m venv %VIRTUAL_ENV%
 )
 

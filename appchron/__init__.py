@@ -3,8 +3,8 @@ import os
 from argparse import ArgumentParser
 
 import app
-from db_handler import DatabaseHandler
-from watcher import WatcherThread
+import db_handler
+import watcher
 
 _DATA_DIR: str = "appchron/data"
 _SQLITE_PATH: str = _DATA_DIR + "/appchron.sqlite3"
@@ -18,14 +18,14 @@ def gui():
 
 def recording():
     # Create the sqlite if it doesn't exist
-    dbHandler: DatabaseHandler = createSQLiteFile()
+    dbHandler: db_handler.DatabaseHandler = createSQLiteFile()
 
     # Initialize the watcher to begin watching and logging the active application.
-    watcherthread: WatcherThread = WatcherThread(dbHandler)
+    watcherthread: watcher.WatcherThread = watcher.WatcherThread(dbHandler)
     watcherthread.start()
 
 
-def createSQLiteFile() -> DatabaseHandler:
+def createSQLiteFile() -> db_handler.DatabaseHandler:
     # Create data folder
     try:
         os.makedirs(_DATA_DIR)
@@ -33,7 +33,8 @@ def createSQLiteFile() -> DatabaseHandler:
         pass
 
     # Create DbHandler and database file
-    dbHandler: DatabaseHandler = DatabaseHandler(_SQLITE_PATH)
+    dbHandler: db_handler.DatabaseHandler = db_handler.DatabaseHandler(
+        _SQLITE_PATH)
     dbHandler.createTables()
     return dbHandler
 
