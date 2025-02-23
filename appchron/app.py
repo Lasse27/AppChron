@@ -1,25 +1,20 @@
 from flask import Flask, render_template
 from flaskwebgui import FlaskUI
 
-from watcher import WatcherThread
+_APP: Flask = Flask(__name__)
 
 
-app: Flask = Flask(__name__)
-
-
-@app.route("/")
+@_APP.route("/")
 def index():
     return render_template("index.html")
 
 
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Main-Process >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Main-Process >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> #
 
-if __name__ == "__main__":
-    # Initialize the watcher to begin watching and logging the active application.
-    watcherthread: WatcherThread = WatcherThread()
-    watcherthread.start()
+
+def runGUI() -> None:
 
     # Starts the UI
     FlaskUI(
-        app=app, port=80, fullscreen=False, width=800, height=600, server="flask"
+        app=_APP, port=80, fullscreen=False, width=800, height=600, server="flask"
     ).run()

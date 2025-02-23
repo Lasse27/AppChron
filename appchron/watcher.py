@@ -5,16 +5,24 @@ import win32process  # type: ignore
 import psutil
 import threading
 
+from db_handler import DatabaseHandler
+
 
 class WatcherThread(threading.Thread):
 
-    def __init__(self):
+    #
+    #
+
+    def __init__(self, databaseHandler: DatabaseHandler):
         super(WatcherThread, self).__init__()
+        self.databaseHandler = databaseHandler
+
+    #
+    #
 
     def run(self) -> None:
         """
-        ### Summary
-            Runs on start of watcher thread, general procedure.
+        Runs on start of watcher thread, general procedure.
         """
         durationSeconds: int = 0
         process: psutil.Process = self.getActiveProcess()
@@ -25,26 +33,43 @@ class WatcherThread(threading.Thread):
             if process.pid == nextProcess.pid:
                 pass
             else:
-                self.on_active_changed(process)
+                self.on_active_changed(process, durationSeconds)
                 process = nextProcess
+                durationSeconds = 0
 
-    def on_active_changed(self, process: psutil.Process) -> None:
+    #
+    #
+
+    def on_active_changed(self, process: psutil.Process, durationSeconds: int) -> None:
         """
-        ### Summary:
-            Ereignis bei Wechsel des aktiven Prozesses
+        Ereignis bei Wechsel des aktiven Prozesses
 
-        ### Args:
+        *Args*:
             process (psutil.Process): Der Prozess der vorher aktiv war und nun geloggt wird.
         """
-        print(process.pid)
-        print(process.name())
-        pass
+        try:
+            self.databaseHandler.connect()
+            _INSERT: str = f"""
+                INSERT INTO PROCESS_ENTRIES("pid", "name", "durationSec") 
+                VALUES("{process.pid}", "{process.name()}", "{durationSeconds}")
+            """
+
+            self.databaseHandler.runQuery(_INSERT)
+
+        except Exception as e:
+            print(f"Something went wrong: {e}")
+
+        finally:
+            self.databaseHandler.disconnect()
+
+    #
+    #
 
     def getActiveProcess(self) -> psutil.Process:
         """
-        ### Summary:
-            Collects the currently active process from the win32 api.
-        ### Returns:
+        Collects the currently active process from the win32 api.
+
+        *Returns*:
             psutil.Process: The currently active process as psutil.Process instance.
         """
         windowHandle = win32gui.GetForegroundWindow()
