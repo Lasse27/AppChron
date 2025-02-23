@@ -10,8 +10,18 @@ class DatabaseHandler():
         databaseConnection (sqlite.Connection | None): The active database connection.
     """
 
-    #
-    #
+    CREATETABLEQUERY: str = """
+            CREATE TABLE "APP_ENTRIES" (
+                "auto_id"	    INTEGER NOT NULL UNIQUE,
+                "pid"	        INTEGER NOT NULL,
+                "name"	        TEXT NOT NULL,
+                "durationSec"	INTEGER NOT NULL,
+                PRIMARY KEY("auto_id" AUTOINCREMENT)
+            );
+            """
+
+   #
+   #
 
     def __init__(self, filepath: str):
         """
@@ -40,17 +50,32 @@ class DatabaseHandler():
         self.databaseConnection = sqlite.connect(
             database=self.filepath,
             timeout=10.0,
-            detect_types=sqlite.PARSE_DECLTYPES | sqlite.PARSE_COLNAMES,
             isolation_level="IMMEDIATE",
             check_same_thread=False,
-            cached_statements=200,
-            uri=True
-        )
+            cached_statements=200)
 
         # PRAGMA for better performance
-        self.databaseConnection.execute('PRAGMA journal_mode = WAL')
-        self.databaseConnection.execute('PRAGMA synchronous = NORMAL')
-        self.databaseConnection.execute('PRAGMA temp_store = MEMORY')
+        # self.databaseConnection.execute('PRAGMA journal_mode = WAL')
+        # self.databaseConnection.execute('PRAGMA synchronous = NORMAL')
+        # self.databaseConnection.execute('PRAGMA temp_store = MEMORY')
+
+    #
+    #
+
+    def createTables(self) -> None:
+        try:
+            # Verbindung zur Datenbank herstellen (wird erstellt, falls sie nicht existiert)
+            self.connect()
+            print("Datenbank erfolgreich geöffnet/erstellt.")
+
+            # SQL-Befehl zum Erstellen der Tabelle
+            self.runQuery(self.CREATETABLEQUERY)
+
+        except Exception as e:
+            print(f"Fehler beim Arbeiten mit SQLite: {e}")
+
+        finally:
+            self.disconnect()
 
     #
     #
@@ -82,6 +107,7 @@ class DatabaseHandler():
         cursor = self.databaseConnection.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
+        self.databaseConnection.commit()
 
         # Close the cursor
         cursor.close()
@@ -98,6 +124,15 @@ class DatabaseHandler():
             None
 
         *Raises*:
-            sqlite.OperationalError: If closing the connection fails.
+            sqlite.OperationalError: If closing the connection fails or database connection is not established.
         """
+        if not self.databaseConnection:
+            raise sqlite.OperationalError(
+                "Database connection is not established. Call connect() first.")
+
         self.databaseConnection.close()
+
+
+if __name__ == "__main__":
+    handler = DatabaseHandler("appchron/data/appchron.sqlite3")
+    handler.createTables()
