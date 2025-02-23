@@ -25,14 +25,14 @@ Das Projekt besteht aus zwei Hauptkomponenten:
 
    ```bash
    git clone https://github.com/lasse27/appchron.git
-   cd active-app-logger
+   cd [...]/Appchron
    ```
 
 2. **Virtuelle Umgebung erstellen (optional):**
 
    ```bash
-   python -m venv venv
-   source venv/bin/activate    # Unter Windows: venv\Scripts\activate
+   python -m venv .venv
+   source .venv/bin/activate    # Unter Windows: venv\Scripts\activate
    ```
 
 3. **Abhängigkeiten installieren:**
@@ -46,6 +46,7 @@ Das Projekt besteht aus zwei Hauptkomponenten:
 4. **Skript starten:**
 
    ```bash
+   cd [...]/Appchron/appchron
    python app.py
    ```
 
