@@ -2,7 +2,7 @@ import multiprocessing
 import os
 from argparse import ArgumentParser
 
-from app import runGUI
+from app import run_gui
 from watcher import WatcherThread
 from db_handler import DatabaseHandler
 
@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
     processes = []
     if args.mode in ['gui', 'all']:
-        processes.append(multiprocessing.Process(target=runGUI))
+        processes.append(multiprocessing.Process(target=run_gui))
 
     if args.mode in ['recording', 'all']:
         processes.append(multiprocessing.Process(target=recording))
