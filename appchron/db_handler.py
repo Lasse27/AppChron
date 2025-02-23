@@ -11,7 +11,7 @@ class DatabaseHandler():
     """
 
     CREATETABLEQUERY: str = """
-            CREATE TABLE "APP_ENTRIES" (
+            CREATE TABLE IF NOT EXISTS "PROCESS_ENTRIES" (
                 "auto_id"	    INTEGER NOT NULL UNIQUE,
                 "pid"	        INTEGER NOT NULL,
                 "name"	        TEXT NOT NULL,
@@ -53,11 +53,6 @@ class DatabaseHandler():
             isolation_level="IMMEDIATE",
             check_same_thread=False,
             cached_statements=200)
-
-        # PRAGMA for better performance
-        # self.databaseConnection.execute('PRAGMA journal_mode = WAL')
-        # self.databaseConnection.execute('PRAGMA synchronous = NORMAL')
-        # self.databaseConnection.execute('PRAGMA temp_store = MEMORY')
 
     #
     #

@@ -33,13 +33,14 @@ class WatcherThread(threading.Thread):
             if process.pid == nextProcess.pid:
                 pass
             else:
-                self.on_active_changed(process)
+                self.on_active_changed(process, durationSeconds)
                 process = nextProcess
+                durationSeconds = 0
 
     #
     #
 
-    def on_active_changed(self, process: psutil.Process) -> None:
+    def on_active_changed(self, process: psutil.Process, durationSeconds: int) -> None:
         """
         Ereignis bei Wechsel des aktiven Prozesses
 
@@ -48,8 +49,17 @@ class WatcherThread(threading.Thread):
         """
         try:
             self.databaseHandler.connect()
+            _INSERT: str = f"""
+                INSERT INTO PROCESS_ENTRIES("pid", "name", "durationSec") 
+                VALUES("{process.pid}", "{process.name()}", "{durationSeconds}")
+            """
 
-        except:
+            self.databaseHandler.runQuery(_INSERT)
+
+        except Exception as e:
+            print(f"Something went wrong: {e}")
+
+        finally:
             self.databaseHandler.disconnect()
 
     #
