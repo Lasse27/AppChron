@@ -2,6 +2,7 @@ from flask import Flask, jsonify, render_template
 from flaskwebgui import FlaskUI
 from db_handler import DatabaseHandler
 from pathlib import Path
+from calculator import calculate_duration, TimeFormat
 
 #
 #
@@ -39,18 +40,35 @@ def refresh_data():
     """
     try:
         # Daten aus SQLite-Datenbank laden
-        handler = DatabaseHandler(str(SQL_PATH))
-        handler.connect()
-        query_result = handler.runQuery('Select id, name FROM PROCESS')
-        handler.disconnect()
+        data : list[tuple] = get_usage_data()
         
         # Daten in JSON-Format für D3.js konvertieren
-        return jsonify([{'id': row[1], 'name': row[0]} for row in query_result])
+        return jsonify([{'id': row[0], 'name': row[1]} for row in data])
     
     except Exception as e:
         app.logger.error(f"Datenbankfehler: {str(e)}")
         return jsonify({'error': 'Datenbankzugriff fehlgeschlagen'}), 500
+       
+#
+#
 
+def get_usage_data() -> list[tuple]:
+    # Daten aus SQLite-Datenbank laden
+    handler = DatabaseHandler(str(SQL_PATH))
+    handler.connect()
+    process_names = handler.runQuery('Select id, name FROM PROCESS')
+    handler.disconnect()
+    
+    result : list = []
+    for (id, name) in process_names:
+        handler.connect()
+        process_durations = handler.runQuery(f"""Select "durationSec" FROM "ENTRY" WHERE "mid" = "{id}" """)
+        duration_minutes = calculate_duration(process_durations, TimeFormat.Minute)
+        handler.disconnect()
+        result.append((name, duration_minutes))
+    
+    print(result)
+    return result
 #
 #
 

@@ -6,13 +6,15 @@ from app import runGUI
 from watcher import WatcherThread
 from db_handler import DatabaseHandler
 
-
+#
+#
 
 # Constant
 _DATA_DIR: str = os.path.join(os.path.dirname(__file__), 'data')
 _SQLITE_PATH: str = _DATA_DIR + "/appchron.sqlite3"
 
-
+#
+#
 
 def recording():
     """
@@ -25,7 +27,8 @@ def recording():
     watcherthread: WatcherThread = WatcherThread(handler)
     watcherthread.start()
 
-
+#
+#
 
 def create_sqlite_file() -> DatabaseHandler:
     """
@@ -43,7 +46,8 @@ def create_sqlite_file() -> DatabaseHandler:
     handler.createTables()
     return handler
 
-
+#
+#
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
