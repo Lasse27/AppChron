@@ -7,7 +7,6 @@ from watcher import WatcherThread
 from db_handler import DatabaseHandler
 
 
-
 # Constant
 _DATA_DIR: str = os.path.join(os.path.dirname(__file__), 'data')
 _SQLITE_PATH: str = _DATA_DIR + "/appchron.sqlite3"
@@ -63,3 +62,4 @@ if __name__ == '__main__':
 
     for p in processes:
         p.start()
+

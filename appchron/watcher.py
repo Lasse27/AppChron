@@ -49,13 +49,16 @@ class WatcherThread(threading.Thread):
         """
         try:
             self.databaseHandler.connect()
-            _INSERT: str = f"""
-                INSERT INTO PROCESS_ENTRIES("pid", "name", "durationSec") 
-                VALUES("{process.pid}", "{process.name()}", "{durationSeconds}")
-            """
+            
+            _INSERT_PROCESS: str = f"INSERT OR REPLACE INTO PROCESS (name) SELECT '{process.name()}' WHERE NOT EXISTS (SELECT 1 FROM PROCESS WHERE name = '{process.name()}')"
+            _MID_PROCESS: str = f"SELECT (id) FROM PROCESS WHERE name = '{process.name()}'"
 
-            self.databaseHandler.runQuery(_INSERT)
-
+            self.databaseHandler.runQuery(_INSERT_PROCESS)
+            mid = self.databaseHandler.runQuery(_MID_PROCESS)
+            print(mid)
+            _INSERT_ENTRY: str = f"INSERT INTO ENTRY('pid', 'mid', 'name', 'durationSec') VALUES('{process.pid}', '{mid[0][0]}', '{process.name()}', '{durationSeconds}')"
+            self.databaseHandler.runQuery(_INSERT_ENTRY)
+            
         except Exception as e:
             print(f"Something went wrong: {e}")
 

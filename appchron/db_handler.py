@@ -10,16 +10,25 @@ class DatabaseHandler():
         databaseConnection (sqlite.Connection | None): The active database connection.
     """
 
-    CREATETABLEQUERY: str = """
-            CREATE TABLE IF NOT EXISTS "PROCESS_ENTRIES" (
-                "auto_id"	    INTEGER NOT NULL UNIQUE,
-                "pid"	        INTEGER NOT NULL,
-                "name"	        TEXT NOT NULL,
+    CREATE_ENTRY_TABLE: str = """
+            CREATE TABLE IF NOT EXISTS "ENTRY" (
+                "auto_id"	INTEGER NOT NULL UNIQUE,
+                "pid"	INTEGER NOT NULL,
+                "mid"	INTEGER NOT NULL,
+                "name"	TEXT NOT NULL,
                 "durationSec"	INTEGER NOT NULL,
-                PRIMARY KEY("auto_id" AUTOINCREMENT)
+                PRIMARY KEY("auto_id" AUTOINCREMENT),
+                FOREIGN KEY("mid") REFERENCES "PROCESS"("id")
             );
             """
-
+            
+    CREATE_PROCESS_TABLE: str = """
+            CREATE TABLE IF NOT EXISTS "PROCESS" (
+                "id"	INTEGER NOT NULL UNIQUE,
+                "name"	INTEGER NOT NULL UNIQUE,
+                PRIMARY KEY("id" AUTOINCREMENT)
+            );
+            """
    #
    #
 
@@ -59,12 +68,9 @@ class DatabaseHandler():
 
     def createTables(self) -> None:
         try:
-            # Verbindung zur Datenbank herstellen (wird erstellt, falls sie nicht existiert)
             self.connect()
-            print("Datenbank erfolgreich geöffnet/erstellt.")
-
-            # SQL-Befehl zum Erstellen der Tabelle
-            self.runQuery(self.CREATETABLEQUERY)
+            self.runQuery(self.CREATE_PROCESS_TABLE)
+            self.runQuery(self.CREATE_ENTRY_TABLE)
 
         except Exception as e:
             print(f"Fehler beim Arbeiten mit SQLite: {e}")
