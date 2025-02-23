@@ -13,7 +13,6 @@ _SQLITE_PATH: str = _DATA_DIR + "/appchron.sqlite3"
 def gui():
     app.runGUI()
     pass
-    # Code für Modul 1
 
 
 def recording():
