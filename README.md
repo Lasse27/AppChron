@@ -22,10 +22,12 @@ AppChron – Eine Python-Anwendung, die die aktive App auf deinem PC überwacht 
 2. **Virtuelle Umgebung erstellen (optional, aber empfohlen):**
 
    ```bash
-   python -m venv venv
+   python -m venv .venv
    source venv/bin/activate  # Linux/macOS
    venv\Scripts\activate     # Windows
    ```
+
+   oder über das Skript `initialiseVenv.bat` im scripts-Ordner.
 
 3. **Abhängigkeiten installieren:**
 
@@ -35,11 +37,13 @@ AppChron – Eine Python-Anwendung, die die aktive App auf deinem PC überwacht 
 
 ## Verwendung
 
-Starte die Anwendung über das Hauptskript (z.B. `main.py` oder ein anderes Startskript):
+Starte die Anwendung über das Hauptskript (z.B. `__init__.py` oder ein anderes Startskript):
 
 ```bash
-python main.py
+python __init__.py --mode both
 ```
+Über das Skript `shortcuts.py` können entsprechende Links im Startmenü, Desktop und Autostart erstellt werden, sodass die Anwendung von Programmstart an im Hintergrund läuft.
+Die Links im Startmenü und Desktop dienen dem Öffnen des GUIs.
 
 Die Anwendung nutzt Flask als Backend und FlaskWebGUI, um eine benutzerfreundliche grafische Oberfläche bereitzustellen.
 
@@ -65,9 +69,3 @@ Dieses Projekt wird unter der **MIT Lizenz** veröffentlicht. Details findest du
 
 Beiträge sind willkommen! Falls du Fehler findest oder neue Features vorschlagen möchtest, erstelle bitte ein Issue oder einen Pull Request.
 
----
-
-*Hinweis: Passe die Dateinamen und Pfade ggf. an dein Projekt an.*
-```
-
-Du kannst diese README.md nach Belieben erweitern oder anpassen. Viel Erfolg mit deinem Projekt!
