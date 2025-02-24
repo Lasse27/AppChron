@@ -13,7 +13,7 @@ def main () -> None:
     
     desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop', 'AppChron-Recording.lnk') 
     startmenu = os.path.join(os.environ['APPDATA'], 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'AppChron-Recording.lnk')
-    autostart = os.path.join(os.environ['APPDATA'], 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'StartUp', 'AppChron-Recording.lnk')
+    autostart = os.path.join(os.environ['APPDATA'], 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'StartUp', 'AppChron-Recording.bat')
 
     shell = com.Dispatch("WScript.Shell")
     shortcut = shell.CreateShortcut(desktop)
@@ -27,11 +27,9 @@ def main () -> None:
     shortcut.Arguments = init_silent + " --mode gui"
     shortcut.Save()
 
-    shell = com.Dispatch("WScript.Shell")
-    shortcut = shell.CreateShortcut(autostart)
-    shortcut.TargetPath = r"C:\Python313\pythonw.exe"
-    shortcut.Arguments = init_silent + " --mode recording"
-    shortcut.Save()
+    with open(autostart, 'w+') as f:  # open file in append mode
+        f.write('@echo off\n\r')
+        f.write(f'start pythonw "{init_silent}" --mode recording')
 
 
 

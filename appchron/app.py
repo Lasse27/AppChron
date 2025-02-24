@@ -67,7 +67,11 @@ def get_usage_data() -> list[tuple]:
         handler.disconnect()
         result.append((name, duration_minutes))
     
-    print(result)
+    result.sort(key=lambda tup: tup[1], reverse=True)
+    result = result[0:10:1]
+    
+    for (id, name) in result:
+        print(id)
     return result
 #
 #
@@ -75,7 +79,7 @@ def get_usage_data() -> list[tuple]:
 def run_gui() -> None:
     """Startet die GUI-Anwendung."""
     FlaskUI(
-        app=app, port=80, fullscreen=False, width=800, height=600, server="flask"
+        app=app, port=80, fullscreen=False, width=1280, height=800, server="flask"
     ).run()
 
 #
