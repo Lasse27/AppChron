@@ -1,61 +1,73 @@
 # AppChron
 
-AppChron ist eine Python-Anwendung, die die aktuell aktive Anwendung auf deinem PC überwacht und die Wechselereignisse in einer SQLite-Datenbank protokolliert. Mit diesem Tool lassen sich Nutzungszeiten auswerten, beispielsweise um die Gesamtanwendungszeit eines Monats zu berechnen.
+AppChron – Eine Python-Anwendung, die die aktive App auf deinem PC überwacht und die Nutzung in einer SQLite-Datenbank protokolliert. Ideal, um Nutzungszeiten auszuwerten und Anwendungsgewohnheiten zu analysieren. 
 
-## Projektübersicht
-Das Projekt besteht aus zwei Hauptkomponenten:
+## Inhaltsverzeichnis
 
-- **watcher.py**  
-  Dieses Modul ist verantwortlich für:
-  - Das Erfassen des aktuell aktiven Fensters (mithilfe von Windows-spezifischen APIs wie pywin32 oder pywinauto).
-  - Das Überwachen von Fensterwechseln in regelmäßigen Intervallen oder per Event-Callback.
-  - Das Auslösen von Ereignissen, sobald sich die aktive Anwendung ändert.
+- [Installation](#installation)
+- [Verwendung](#verwendung)
+- [Ordnerstruktur](#ordnerstruktur)
+- [Lizenz](#lizenz)
+- [Mitwirken](#mitwirken)
 
-- **db_handler.py**  
-  Dieses Modul kümmert sich um:
-  - Die Initialisierung und Verwaltung der SQLite-Datenbank.
-  - Das Erstellen der notwendigen Tabellen (z. B. eine Tabelle „app_logs“).
-  - Das Einfügen der Log-Daten (App-Name, Fenstertitel und Zeitstempel).
-  - Die Durchführung von Abfragen, um unter anderem die gesamte Anwendungszeit auszuwerten.
-
-## Installation & Setup
+## Installation
 
 1. **Repository klonen:**
 
    ```bash
-   git clone https://github.com/lasse27/appchron.git
-   cd [...]/Appchron
+   git clone https://github.com/dein-benutzername/dein-projekt.git
+   cd dein-projekt
    ```
 
-2. **Virtuelle Umgebung erstellen (optional):**
+2. **Virtuelle Umgebung erstellen (optional, aber empfohlen):**
 
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate    # Unter Windows: venv\Scripts\activate
+   python -m venv venv
+   source venv/bin/activate  # Linux/macOS
+   venv\Scripts\activate     # Windows
    ```
 
 3. **Abhängigkeiten installieren:**
-
-   Erstelle eine requirements.txt (z.B. mit pywin32 oder pywinauto) und führe dann aus:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Skript starten:**
+## Verwendung
 
-   ```bash
-   cd [...]/Appchron/appchron
-   python app.py
-   ```
+Starte die Anwendung über das Hauptskript (z.B. `main.py` oder ein anderes Startskript):
 
-## Weiterentwicklung
-- Erweiterung der Datenbankstruktur, um explizit Start- und Endzeiten zu speichern.
-- Implementierung eines Dashboards zur Visualisierung der Nutzungszeiten.
-- Verbesserte Fehlerbehandlung und Logging-Mechanismen.
+```bash
+python main.py
+```
+
+Die Anwendung nutzt Flask als Backend und FlaskWebGUI, um eine benutzerfreundliche grafische Oberfläche bereitzustellen.
+
+Weitere Details und Konfigurationsoptionen findest du im `appchron`-Ordner.
+
+## Ordnerstruktur
+
+Ein Überblick über die wichtigsten Dateien und Ordner:
+
+```
+.
+├── appchron           # Enthält alle wichtigen Projektdaten und Dokumente
+├── requirements.txt   # Python-Abhängigkeiten
+├── main.py            # Hauptanwendung (Beispielname)
+└── README.md          # Dieses Dokument
+```
 
 ## Lizenz
-Dieses Projekt ist unter der MIT-Lizenz veröffentlicht. Details findest du in der Datei LICENSE.
 
-## Kontakt
-Bei Fragen oder Verbesserungsvorschlägen kannst du dich gerne unter lassehillen@gmx.de oder über GitHub an mich wenden.
+Dieses Projekt wird unter der **MIT Lizenz** veröffentlicht. Details findest du in der [LICENSE](LICENSE)-Datei.
+
+## Mitwirken
+
+Beiträge sind willkommen! Falls du Fehler findest oder neue Features vorschlagen möchtest, erstelle bitte ein Issue oder einen Pull Request.
+
+---
+
+*Hinweis: Passe die Dateinamen und Pfade ggf. an dein Projekt an.*
+```
+
+Du kannst diese README.md nach Belieben erweitern oder anpassen. Viel Erfolg mit deinem Projekt!
