@@ -1,6 +1,5 @@
 # AppChron
 
-## Kurzbeschreibung
 AppChron ist eine Python-Anwendung, die die aktuell aktive Anwendung auf deinem PC überwacht und die Wechselereignisse in einer SQLite-Datenbank protokolliert. Mit diesem Tool lassen sich Nutzungszeiten auswerten, beispielsweise um die Gesamtanwendungszeit eines Monats zu berechnen.
 
 ## Projektübersicht
