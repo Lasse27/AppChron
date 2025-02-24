@@ -1,34 +1,111 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aktivätenaufzeichnung | AppChron</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='images/icon.ico') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='css/index.css') }}"
+    />
+  </head>
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Aktivätenaufzeichnung | AppChron</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/icon.ico') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/index.css') }}">
-</head>
-
-<body>
-
+  <body>
     <div class="header">
-        <img src="{{ url_for('static', filename='images/icon.ico') }}"
-            style="height:50px; width:50px; border-radius: 15px" alt="AppIcon">
-        <a href="#default" class="logo">AppChron</a>
-        <div class="header-right">
-            <a class="active" href="#home">Home</a>
-            <a href="#contact">Contact</a>
-            <a href="#about">About</a>
-        </div>
+      <img
+        src="{{ url_for('static', filename='images/icon.ico') }}"
+        style="height: 50px; width: 50px; border-radius: 15px"
+        alt="AppIcon"
+      />
+      <a href="#default" class="logo">AppChron</a>
+      <div class="header-right">
+        <a class="active" href="#home">Home</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+      </div>
     </div>
 
-    <div style="padding-left:20px">
-        <h1>Highscores</h1>
-        <p>Resize the browser window to see the effect.</p>
-        <p>Some content..</p>
+    <div style="padding-left: 20px">
+      <h1>Highscores</h1>
+      <p>Resize the browser window to see the effect.</p>
+      <p>Some content..</p>
     </div>
+
+    <button onclick="updateGraph()">Aktualisieren</button>
+    <div id="chart"></div>
+
+    <script>
+      // Initiale Graph-Erstellung
+      let svg = d3
+        .select("#chart")
+        .append("svg")
+        .attr("width", 1280)
+        .attr("height", 400);
+
+      // Update-Funktion für den Button
+      function updateGraph() {
+        fetch("/refresh-data")
+          .then((response) => response.json())
+          .then((data) => drawChart(data));
+      }
+
+      // Graph-Zeichenfunktion
+      function drawChart(dataset) {
+        svg.selectAll("*").remove(); // Alten Graph löschen
+
+        const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+        const width = 1280 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
+
+        // Skalen definieren
+        const xScale = d3
+          .scaleBand()
+          .domain(dataset.map((d) => d.id))
+          .range([0, width])
+          .padding(0.1);
+
+        const yScale = d3
+          .scaleLinear()
+          .domain([0, d3.max(dataset, (d) => d.name)])
+          .range([height, 0]);
+
+        // Achsen hinzufügen
+        svg
+          .append("g")
+          .attr(
+            "transform",
+            `translate(${margin.left}, ${height + margin.top})`
+          )
+          .call(d3.axisBottom(xScale));
+
+        svg
+          .append("g")
+          .attr("transform", `translate(${margin.left}, ${margin.top})`)
+          .call(d3.axisLeft(yScale));
+
+        // Balken zeichnen
+        svg
+          .selectAll("rect")
+          .data(dataset)
+          .enter()
+          .append("rect")
+          .attr("x", (d) => xScale(d.id) + margin.left)
+          .attr("y", (d) => yScale(d.name) + margin.top)
+          .attr("width", xScale.bandwidth())
+          .attr("height", (d) => height - yScale(d.name))
+          .attr("fill", "#2196F3");
+      }
+
+      // Initialen Graph beim Laden anzeigen
+      updateGraph();
+    </script>
 
     <script src="{{url_for('static', filename='javascript/index.js')}}"></script>
-
-</body>
-
+  </body>
 </html>

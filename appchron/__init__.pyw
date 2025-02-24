@@ -2,17 +2,19 @@ import multiprocessing
 import os
 from argparse import ArgumentParser
 
-from app import runGUI
+from app import run_gui
 from watcher import WatcherThread
 from db_handler import DatabaseHandler
 
-
+#
+#
 
 # Constant
 _DATA_DIR: str = os.path.join(os.path.dirname(__file__), 'data')
 _SQLITE_PATH: str = _DATA_DIR + "/appchron.sqlite3"
 
-
+#
+#
 
 def recording():
     """
@@ -25,7 +27,8 @@ def recording():
     watcherthread: WatcherThread = WatcherThread(handler)
     watcherthread.start()
 
-
+#
+#
 
 def create_sqlite_file() -> DatabaseHandler:
     """
@@ -43,7 +46,8 @@ def create_sqlite_file() -> DatabaseHandler:
     handler.createTables()
     return handler
 
-
+#
+#
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
@@ -56,10 +60,11 @@ if __name__ == '__main__':
 
     processes = []
     if args.mode in ['gui', 'all']:
-        processes.append(multiprocessing.Process(target=runGUI))
+        processes.append(multiprocessing.Process(target=run_gui))
 
     if args.mode in ['recording', 'all']:
         processes.append(multiprocessing.Process(target=recording))
 
     for p in processes:
         p.start()
+

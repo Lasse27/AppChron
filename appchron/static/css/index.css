@@ -61,3 +61,12 @@ body {
     float: none;
   }
 }
+
+.chart rect {
+  fill: #4caf50;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 20px;
+}
