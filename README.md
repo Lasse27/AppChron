@@ -15,8 +15,8 @@ AppChron – Eine Python-Anwendung, die die aktive App auf deinem PC überwacht 
 1. **Repository klonen:**
 
    ```bash
-   git clone https://github.com/dein-benutzername/dein-projekt.git
-   cd dein-projekt
+   git clone https://github.com/Lasse27/AppChron
+   cd AppChron
    ```
 
 2. **Virtuelle Umgebung erstellen (optional, aber empfohlen):**
